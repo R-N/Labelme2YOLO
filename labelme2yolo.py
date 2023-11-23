@@ -188,7 +188,8 @@ class Labelme2YOLO(object):
         return label_id, yolo_center_x, yolo_center_y, yolo_w, yolo_h
 
     def _get_other_shape_yolo_object(self, shape, img_h, img_w):
-        label_id = self._label_id_map[shape['label']]
+        label = shape['label']
+        label_id = self._label_id_map[label]
 
         if self._to_seg:
             retval = [label_id]
@@ -213,7 +214,7 @@ class Labelme2YOLO(object):
         yolo_w = round(float(obj_w / img_w), 6)
         yolo_h = round(float(obj_h / img_h), 6)
 
-        return label_id, yolo_center_x, yolo_center_y, yolo_w, yolo_h
+        return label, yolo_center_x, yolo_center_y, yolo_w, yolo_h
     
     def _save_yolo_label(self, json_name, label_dir_path, target_dir, yolo_obj_list):
         txt_path = os.path.join(label_dir_path, 
@@ -231,7 +232,7 @@ class Labelme2YOLO(object):
                 f.write(yolo_obj_line)
 
     def _save_yolo_image(self, json_data, json_name, image_dir_path, target_dir):
-        img_name = json_name.replace('.json', '.png')
+        img_name = json_name.replace('.json', '.jpg')
         img_path = os.path.join(image_dir_path, target_dir,img_name)
         
         if not os.path.exists(img_path):
